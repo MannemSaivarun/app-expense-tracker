@@ -57,6 +57,7 @@ button:hover{
 a:hover{
     color: blue;
 }
+#login-alert,
 #alert{
     color: crimson;
 }
@@ -72,7 +73,7 @@ a:hover{
             <input type="email" id="email" name="email" required/>
           
             <label for="password">Password:</label>
-            <input id="password" name="password" required/>
+            <input  id="password" name="password" required/>
           
             <button type="submit">Signup</button>
             <p id="alert"></p>
@@ -81,14 +82,14 @@ a:hover{
     </div>
 
     <div class="container" id="login-form" style="display: none;">
-        <form  id="signup-form-container">
+        <form onsubmit="checkUserdetails(event)" id="signup-form-container">
             
           
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required/>
+            <label for="Email">Email:</label>
+            <input type="email" id="Email" name="email" required/>
           
-            <label for="password">Password:</label>
-            <input id="password" name="password" required/>
+            <label for="Password">Password:</label>
+            <input id="Password" name="password" required/>
           
             <button type="submit">login</button>
             <p id="login-alert"></p>
@@ -119,7 +120,35 @@ a:hover{
   
 
 
+    //checkuser details which login button clicked
+    function checkUserdetails(event){
+        event.preventDefault();
+            const email = event.target.email.value;
+            const password = event.target.password.value;
+            const obj={
+                email,
+                password
+            }
+            axios.post("http://localhost:3000/user/login", obj)
+            .then((response) =>{
+                
+                console.log(response.data.message)
+                
+                if(response.status===200){alert(response.data.message)}
+                if(response.status===201){document.getElementById('login-alert').innerHTML = response.data.message}
+                if(response.status===202){document.getElementById('login-alert').innerHTML = response.data.message}
+                
+                document.getElementById('Email').value = '';
+                document.getElementById('Password').value ='';
+            })
+            .catch(err=>{
+                if(err.status)
+                console.log(err)
+                document.getElementById('login-alert').innerHTML = err;
+                
+            })
 
+    }
 
     function savetodatabase(event){
             event.preventDefault();
@@ -131,7 +160,7 @@ a:hover{
                 email,
                 password
             }
-            console.log(obj);
+            //console.log(obj);
             axios.post("http://localhost:3000/user/add-user", obj)
             .then((response) =>{
                 
