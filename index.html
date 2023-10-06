@@ -17,7 +17,8 @@
         align-items: center;
         flex-direction: column;
         background-color: aquamarine;
-    }  
+    } 
+ #expense-form-container,    
  #login-form-container,     
  #signup-form-container {
   width: 300px; 
@@ -29,13 +30,14 @@
   display: block; 
    margin-bottom: 10px;  
 }
-
+section,
 input
  {
   width: 100%;
   padding: 5px; 
   margin-bottom: 15px; 
-} 
+}
+section:hover, 
 input:hover{
     background-color:antiquewhite;
 }
@@ -65,10 +67,23 @@ a:hover{
 #sign-in-alert{
     color: rgb(2, 107, 3);
 }
+#expense-btn{
+    margin: 5px;
+}
+#deletebtn{
+    width: 20%;
+}
+.expenses-list{
+    position: relative;
+    left: 2px;
+    margin-left: 2px;
+}
 </style>
 </head>
 <body>
-    
+
+    <!-- signup form -->
+
     <div class="container" id="signup-form">
         <form onsubmit="savetodatabase(event)" id="signup-form-container">
             <label for="name">Name:</label>
@@ -84,9 +99,10 @@ a:hover{
             <p id="sign-in-alert"></p>
             <p id="alert"></p>
         </form>
-        <p>Existing User- <a id="login-toggle" href="">Login</a></p>
+        <p>Existing User- <a id="login-tab" href="">Login</a></p>
     </div>
 
+    <!-- login form -->
     <div class="container" id="login-form" style="display: none;">
         <form onsubmit="checkUserdetails(event)" id="login-form-container">
             
@@ -101,8 +117,33 @@ a:hover{
             
             <p id="login-alert"></p>
         </form>
-        <p>New User- <a id="signup-toggle" href="">Signup</a></p>
+        <p>New User- <a id="signup-tab" href="">Signup</a></p>
     </div>
+
+    <!-- Expense details form -->
+    <div class="container" id="expense-form" style="display: none;">
+        <form id="expense-form-container" onsubmit="savetoexpensedatabase(event)">
+            <label for="expense">Expense:</label>
+            <input type="number" id="expense" name="expense" required/>
+          
+            <label for="description">description:</label>
+            <input id="description" name="description" type="text" required/>
+
+            <label>choose a category</label>
+            <select id="category" name="category">
+                <option value="food">food</option>
+                <option value="petrol">petrol</option>
+                <option value="salary">salary</option>
+                <option value="movie">movie</option>   
+            </select>
+            <button id="expense-btn" type="submit">Add Expense</button>
+        </form>
+        <div class="expenses-list">
+            <h1>List of Expenses</h1>
+            <ul id="list-of-expenses"></ul>
+        </div>
+    </div>
+    
     
     
 </body>
@@ -111,21 +152,21 @@ a:hover{
     
     const signupForm = document.getElementById("signup-form");
     const loginForm = document.getElementById("login-form");
-    const loginToggle = document.getElementById("login-toggle");
-    const signupToggle = document.getElementById("signup-toggle");
+    const loginTab = document.getElementById("login-tab");
+    const signupTab = document.getElementById("signup-tab");
+    const expenseForm = document.getElementById("expense-form");
 
-    loginToggle.addEventListener("click", function () {
+    loginTab.addEventListener("click", function () {
         event.preventDefault()
       signupForm.style.display = "none";
       loginForm.style.display = "block";
     });
 
-    signupToggle.addEventListener("click", function () {
+    signupTab.addEventListener("click", function () {
       loginForm.style.display = "none";
       signupForm.style.display = "block";
     });
-  
-
+    
 
     //checkuser details which login button clicked
     function checkUserdetails(event){
@@ -141,12 +182,17 @@ a:hover{
                 
                 console.log(response.data.message)
                 
-                if(response.status===200){alert(response.data.message)}
+                if(response.status===200){
+                    alert(response.data.message)
+                    document.getElementById('Email').value = '';
+                    document.getElementById('Password').value ='';
+                    addExpensedetails();
+                   
+                }
                 if(response.status===201){document.getElementById('login-alert').innerHTML = response.data.message}
                 if(response.status===202){document.getElementById('login-alert').innerHTML = response.data.message}
                 
-                document.getElementById('Email').value = '';
-                document.getElementById('Password').value ='';
+                
             })
             .catch(err=>{
                 if(err.status)
@@ -156,7 +202,35 @@ a:hover{
             })
 
     }
+    function addExpensedetails(){
+        signupForm.style.display = "none";
+        loginForm.style.display = "none";
+        expenseForm.style.display="block";
 
+    }
+
+    //save to expense table when add button is clicked
+    function savetoexpensedatabase(event){
+        event.preventDefault();
+        const expense = event.target.expense.value;
+        const description = event.target.description.value;
+        const category = event.target.category.value;
+        const obj={
+            expense,
+            description,
+            category
+        }
+        axios.post("http://localhost:3000/expense/add-expense", obj).
+        then((response)=>{
+            alert(response.data.message)
+            displayOnScreen(response.data.Newexpensedetails);
+        }
+        ).catch(err=>{
+            console.log("!!!error in adding expense!!!")
+        })
+    }
+
+    //save to database when signup button is clicked
     function savetodatabase(event){
             event.preventDefault();
             const name = event.target.name.value;
@@ -186,5 +260,98 @@ a:hover{
             })
     
         }
+
+
+
+
+
+        function displayOnScreen(obj){
+                const parentelem = document.getElementById("list-of-expenses");
+                const childelem = document.createElement('ul');
+                childelem.setAttribute('id',obj.id);
+                childelem.textContent = obj.expense + '-' + obj.description + '-' + obj.category + " ";
+
+                const deletebtn = document.createElement('input');
+                deletebtn.type = 'button';
+                deletebtn.value = 'Delete';
+                deletebtn.setAttribute('id','deletebtn');
+
+                // deletebtn.onclick = ()=>{
+                //     axios.delete(`http://localhost:4000/expensetracker/delete-category/${obj.id}`)
+                //    .then(res=>{
+                //     console.log("deleted")
+                //     parentelem.removeChild(childelem);
+                //    })
+                //    .catch(err=>{
+                //     console.log(err)
+                //    })               
+                // }
+
+                // const editbtn = document.createElement('input');
+                // editbtn.type = 'button';
+                // editbtn.value = 'Edit';
+                // editbtn.setAttribute('id','edit');
+                // editbtn.onclick =()=>{
+                //     document.getElementById("expensetag").value = obj.expense;
+                //     document.getElementById("descriptiontag").value = obj.description;
+                //     document.getElementById("cars").value =obj.carname;
+                //     parentelem.removeChild(childelem);
+                // }
+                childelem.appendChild(deletebtn);
+                // childelem.appendChild(editbtn);
+                parentelem.appendChild(childelem);
+
+        }
+        window.addEventListener("DOMContentLoaded",()=>{
+            
+            const signupForm = document.getElementById("signup-form");
+            const loginForm = document.getElementById("login-form");
+            const loginTab = document.getElementById("login-tab");
+            const signupTab = document.getElementById("signup-tab");
+            const expensebtn = document.getElementById("expense-btn")
+            
+            const expenseForm = document.getElementById("expense-form");
+
+           
+
+           
+            function showSignup() {
+               signupForm.style.display = "block";
+               loginForm.style.display = "none";
+               localStorage.setItem("selectedTab", "signup");
+           }
+           
+           // Function to show the login content and hide signup content
+           function showLogin() {
+               loginForm.style.display = "block";
+               signupForm.style.display = "none";
+               localStorage.setItem("selectedTab", "login");
+           }
+           
+           // Event listeners to switch between tabs
+           signupTab.addEventListener("click", showSignup);
+           loginTab.addEventListener("click", showLogin);
+           
+           // Determine which tab to display based on a saved state
+           const savedState = localStorage.getItem("selectedTab");
+
+           if (savedState === "login") {
+               showLogin();
+           } else {
+               showSignup();
+           }
+
+
+            axios.get("http://localhost:3000/expense/get-allcategories")
+            .then(res=>{
+                for(let i=0;i<res.data.allcategorydetails.length;i++){
+                    displayOnScreen(res.data.allcategorydetails[i])
+                }
+            })
+            .catch(err=>{
+                console.log("unable to get all users",err)
+            })
+        })
+
 </script>
 </html>
