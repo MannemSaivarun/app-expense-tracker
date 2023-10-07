@@ -1,0 +1,60 @@
+body{
+    background-color: rgb(246, 239, 229);
+    margin-left: 40%;
+}
+.container{
+width: 320px;
+margin-top: 30px;
+padding-top: 20px;
+border: 2px solid aquamarine;
+display: flex;
+align-items: center;
+flex-direction: column;
+background-color: aquamarine;
+} 
+#signup-form-container {
+width: 300px; 
+margin: 0 auto;  
+}
+
+
+label {
+display: block; 
+margin-bottom: 10px;  
+}
+
+input
+{
+width: 100%;
+padding: 5px; 
+margin-bottom: 15px; 
+}
+
+input:hover{
+background-color:antiquewhite;
+}
+
+button {
+display: block; 
+padding: 10px 20px; 
+background-color:red; 
+color: #fff; 
+border: none; 
+cursor: pointer;
+} 
+a{
+text-decoration: none;
+color: red;
+}
+button:hover{
+background-color: blue;
+}
+a:hover{
+color: blue;
+}
+#alert{
+color: crimson;
+} 
+#sign-in-alert{
+color: rgb(2, 107, 3);
+}

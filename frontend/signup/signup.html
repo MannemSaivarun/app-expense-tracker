@@ -1,0 +1,30 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="signup.css">
+</head>
+<body>
+    <div class="container" id="signup-form">
+        <form onsubmit="savetodatabase(event)" id="signup-form-container">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required/>
+          
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required/>
+          
+            <label for="password">Password:</label>
+            <input  id="password" name="password" type="password" required/>
+          
+            <button type="submit">Signup</button>
+            <p id="sign-in-alert"></p>
+            <p id="alert"></p>
+        </form>
+        <p>Existing User- <a id="login-tab" href="../login/login.html">Login</a></p>
+    </div>
+    
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+<script src="signup.js"></script>
+</html>

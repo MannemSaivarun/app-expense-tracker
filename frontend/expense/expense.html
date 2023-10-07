@@ -1,0 +1,34 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="expense.css">
+</head>
+<body>
+    <div class="container" id="expense-form" >
+        <form id="expense-form-container" onsubmit="savetoexpensedatabase(event)">
+            <label for="expense">Expense:</label>
+            <input type="number" id="expense" name="expense" required/>
+          
+            <label for="description">description:</label>
+            <input id="description" name="description" type="text" required/>
+
+            <label for="category">choose a category</label>
+            <select id="category" name="category">
+                <option value="food">food</option>
+                <option value="petrol">petrol</option>
+                <option value="salary">salary</option>
+                <option value="movie">movie</option>   
+            </select>
+            <button id="expense-btn" type="submit">Add Expense</button>
+        </form>
+        <div class="expenses-list">
+            <h1>List of Expenses</h1>
+            <ul id="list-of-expenses"></ul>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+    <script src="expense.js"></script>
+</body>
+</html>

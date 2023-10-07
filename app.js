@@ -13,6 +13,7 @@ var cors = require('cors');
 app.use(cors());
 
 const userRoutes = require('./routes/user');
+
 app.use('/user',userRoutes);
 
 const expenseRoutes = require('./routes/expense');
