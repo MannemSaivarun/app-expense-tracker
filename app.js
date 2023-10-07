@@ -1,5 +1,6 @@
 const express = require('express');
-
+const User = require('./model/user');
+const Expense = require('./model/expense')
 const app = express();
 const sequelize = require('./util/database');
 
@@ -16,6 +17,9 @@ app.use('/user',userRoutes);
 
 const expenseRoutes = require('./routes/expense');
 app.use('/expense',expenseRoutes);
+
+User.hasMany(Expense);
+Expense.belongsTo(User);
 
 sequelize.sync().then(result =>{
     app.listen(3000);

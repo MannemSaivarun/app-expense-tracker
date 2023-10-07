@@ -1,5 +1,12 @@
 const User = require('../model/user');
 const bcrypt = require("bcrypt");
+const jwt = require('jsonwebtoken');
+
+const crypto = require('crypto');
+
+
+// console.log(secretKey);
+
 // signup 
 function isstringinvalid(string){
     if(string===undefined || string===0){
@@ -18,6 +25,11 @@ exports.addUser = async (req,res,next)=>{
             if(isstringinvalid(name)|| isstringinvalid(email) || isstringinvalid(password)){
                 return res.status(400).json({err:"bad parameters. Something is missing"})
             }
+            const existingUser = await User.findAll({ where: { email } });
+            if (existingUser.length>0) {
+                console.log("user already exists", existingUser)
+                return res.status(400).json({ error: 'User already exists' });
+              }
             const saltrounds = 10 
             bcrypt.hash(password,saltrounds,async(err,hash)=>{
                 await User.create({name: name, email: email, password: hash})
@@ -27,10 +39,16 @@ exports.addUser = async (req,res,next)=>{
     
         } catch (error) {
                 res.status(500).json({
-                error: "User already exists"
+                error: error
             })
         }
     }
+// Generate a random 256-bit (32-byte) secret key
+// const secretKey = crypto.randomBytes(64).toString('hex');
+// console.log(secretKey.toString())
+function generateAcessToken(id,name){
+    return jwt.sign({userId : id, name : name},'secretkey')
+}    
 
 //login
 exports.loginUser = async (req,res)=>{
@@ -52,9 +70,9 @@ exports.loginUser = async (req,res)=>{
                 if (err) {
                   // Handle the error
                   res.status(202).json({success:false, message:"User doesnot exist"})
-                } else if (result) {
+                } else if (result === true) {
                   // Passwords match, grant access to the user
-                  res.status(200).json({success:true,message:"User loged in succefully"})
+                  res.status(200).json({success:true, message:"User loged in succefully", token: generateAcessToken(user[0].id,user[0].name) })
                 } else {
                   // Passwords do not match, deny access
                   res.status(201).json({success:false, message:"password doesnot matched"})
