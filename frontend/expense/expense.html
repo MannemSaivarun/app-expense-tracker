@@ -23,11 +23,23 @@
             </select>
             <button id="expense-btn" type="submit">Add Expense</button>
         </form>
-        <div class="expenses-list">
-            <h1>List of Expenses</h1>
-            <ul id="list-of-expenses"></ul>
-        </div>
+        
     </div>
+    <div id="membership">
+        <div class="scroll-container">
+            <div class="scroll-content" id="scroll-content">
+              <p>Buy a premium membership to enjoy all features</p>
+            </div>
+        </div>
+        <button id="rzp-button1">Buy Premium</button>
+    </div> 
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <div class="expenses-list">
+        <h1>List of Expenses</h1>
+        <ul id="list-of-expenses"></ul>
+    </div>
+    
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
     <script src="expense.js"></script>
 </body>

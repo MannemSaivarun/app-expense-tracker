@@ -52,15 +52,74 @@ background-color: blue;
 /* a:hover{
 color: blue;
 } */
+#expense-btn :hover{background-color:antiquewhite;
+}
 
 #expense-btn{
 margin: 5px;
+cursor: pointer;
 }
 #deletebtn{
-width: 20%;
+  margin-left: 2px;
+width: 10%;
+cursor: pointer;
+background-color: red;
+border-color: red;
 }
-.expenses-list{
-position: relative;
-left: 2px;
-margin-left: 2px;
+
+
+
+
+#list-of-expenses{
+  padding-left: 0;
 }
+#membership{
+position: relative; 
+top: 20px; 
+}
+#membership button{
+    position: absolute;
+    top: 50px;
+    background-color:goldenrod;
+    cursor: pointer;
+    border-color: goldenrod;
+}
+#membership p{
+    
+    color: goldenrod;
+    font-size: 20px;
+}
+.scroll-container {
+    width: 400px;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  
+  #scroll-content {
+    display: inline-block;
+    animation: scrollText 12s linear infinite;
+    padding: 10px;
+    
+  }
+  
+  @keyframes scrollText {
+    0% {
+      transform: translateX(100%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+  
+
+
+
+  
+  
+
+  
+
+
+
+
+  

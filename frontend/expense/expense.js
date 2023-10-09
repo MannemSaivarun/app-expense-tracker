@@ -1,3 +1,5 @@
+// import Razorpay from 'razorpay';
+
 function savetoexpensedatabase(event){
     event.preventDefault();
     const expense = event.target.expense.value;
@@ -74,3 +76,37 @@ window.addEventListener("DOMContentLoaded",()=>{
         console.log("unable to get all users",err)
     })
 })
+// if(localStorage.getItem('ispremiumuser')){
+//     document.getElementById('rzp-button1').style.display ="none";
+//     document.getElementById('scroll-content').innerHTML = "Now You'r a premium user. Enjoy all the premium features"
+//     document.body.style.backgroundColor = "#ABD417"
+//     document.getElementById('expense-form').style.backgroundColor="#2DD417"
+// }
+document.getElementById('rzp-button1').onclick = async function(e){
+    console.log("button clicked")
+    const token = localStorage.getItem('token');
+    const response = await axios.get('http://localhost:3000/purchase/premiummembership', {headers : {"Authorization" : token}})
+    console.log("response after get request from razorpay",response)
+    var options ={
+        "key": response.data.key_id,
+        "order_id": response.data.order.id,
+        //handler funtion will handle the success payment
+        "handler":async function (response){
+            console.log("handler options")
+            await axios.post('http://localhost:3000/purchase/updatetransactionstatus',{
+                order_id: options.order_id,
+                payment_id: response.razorpay_payment_id,
+            },{headers:{"Authorization": token} })
+            alert('You are a premium user now')
+            // document.getElementById('rzp-button1').style.display="none";
+        },
+    };
+    const rzp1 = new Razorpay(options);
+    rzp1.open();
+    e.preventDefault();
+
+    rzp1.on('payment.failed', function(response){
+        console.log(response)
+        alert('Something went wrong')
+    });
+}

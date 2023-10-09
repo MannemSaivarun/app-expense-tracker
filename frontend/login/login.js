@@ -15,6 +15,7 @@ function checkUserdetails(event){
                 alert(response.data.message)
                 
                 localStorage.setItem('token',response.data.token)
+                localStorage.setItem('ispremiumuser',response.data.ispremiumuser)
                 window.location.href ="../expense/expense.html";
                
             }

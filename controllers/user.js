@@ -72,7 +72,7 @@ exports.loginUser = async (req,res)=>{
                   res.status(202).json({success:false, message:"User doesnot exist"})
                 } else if (result === true) {
                   // Passwords match, grant access to the user
-                  res.status(200).json({success:true, message:"User loged in succefully", token: generateAcessToken(user[0].id,user[0].name) })
+                  res.status(200).json({success:true, message:"User loged in succefully", token: generateAcessToken(user[0].id,user[0].name), ispremiumuser : user[0].ispremiumuser })
                 } else {
                   // Passwords do not match, deny access
                   res.status(201).json({success:false, message:"password doesnot matched"})
