@@ -1,4 +1,4 @@
-// import Razorpay from 'razorpay';
+
 
 function savetoexpensedatabase(event){
     event.preventDefault();
@@ -59,14 +59,37 @@ function displayOnScreen(obj){
     parentelem.appendChild(childelem);
 
 }
+function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
 
-
+    return JSON.parse(jsonPayload);
+}
+function showpremiummessage(){
+           document.getElementById('rzp-button1').style.display ="none";
+           document.getElementById('leaderboard').style.display = "block";
+           document.getElementById('premiumfeatures').style.display="block";
+           
+           document.getElementById('scroll-content').innerHTML = "Now You'r a premium user. Enjoy all the premium features"
+           document.body.style.backgroundColor = "#ABD417"
+           document.getElementById('expense-form').style.backgroundColor="#2DD417"
+}
 window.addEventListener("DOMContentLoaded",()=>{
 
     const token =localStorage.getItem('token')
+    const decodedToken  = parseJwt(token)
+    const ispremiumuser = decodedToken.ispremiumuser
+    if(ispremiumuser){
+        showpremiummessage()
+        showLeaderboard()
+    }
     console.log(token)
     axios.get("http://localhost:3000/expense/get-allcategories",{headers:{"Authorization" : token}})
     .then(res=>{
+        
         console.log("all categories",res.data.allcategorydetails)
         for(let i=0;i<res.data.allcategorydetails.length;i++){
             displayOnScreen(res.data.allcategorydetails[i])
@@ -98,7 +121,9 @@ document.getElementById('rzp-button1').onclick = async function(e){
                 payment_id: response.razorpay_payment_id,
             },{headers:{"Authorization": token} })
             alert('You are a premium user now')
-            // document.getElementById('rzp-button1').style.display="none";
+            localStorage.setItem('token',res.data.token)
+            showpremiummessage()
+            showLeaderboard()
         },
     };
     const rzp1 = new Razorpay(options);
@@ -109,4 +134,17 @@ document.getElementById('rzp-button1').onclick = async function(e){
         console.log(response)
         alert('Something went wrong')
     });
+}
+
+
+
+
+function showLeaderboard(){
+    document.getElementById('leaderboard').onclick = async ()=>{
+        const token = localStorage.getItem('token')
+        const userLeaderBoardArray = await axios.get('http://localhost:3000/premium/leaderboard')
+        console.log(userLeaderBoardArray);
+        //<-------to be displayed------>
+    
+    }
 }

@@ -23,6 +23,8 @@ app.use('/expense',expenseRoutes);
 const purchaseRoutes = require('./routes/purchase')
 app.use('/purchase',purchaseRoutes);
 
+const premiumRoutes = require('./routes/premiumfeatures')
+app.use('/premium',premiumRoutes);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);

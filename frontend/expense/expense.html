@@ -32,15 +32,22 @@
             </div>
         </div>
         <button id="rzp-button1">Buy Premium</button>
+        <button id="leaderboard" style="display: none;">Leader board</button>
     </div> 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <div id="premiumfeatures" style="display: none;">
+        <h1>Leaderboard</h1>
+        <ul id="list-of-leaders"></ul>
+    </div>
     <div class="expenses-list">
         <h1>List of Expenses</h1>
         <ul id="list-of-expenses"></ul>
     </div>
     
     
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
     <script src="expense.js"></script>
+    
 </body>
 </html>

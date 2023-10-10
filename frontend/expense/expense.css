@@ -61,14 +61,18 @@ cursor: pointer;
 }
 #deletebtn{
   margin-left: 2px;
+  padding: 1px;
 width: 10%;
 cursor: pointer;
 background-color: red;
 border-color: red;
 }
-
-
-
+.expenses-list{
+  width: 500px;
+  position: relative;
+  left: -600px;
+  border-right: 2px solid black;
+}
 
 #list-of-expenses{
   padding-left: 0;
@@ -100,6 +104,10 @@ top: 20px;
     animation: scrollText 12s linear infinite;
     padding: 10px;
     
+  }
+  #premiumfeatures{
+    position: relative;
+    top: 50px;
   }
   
   @keyframes scrollText {
