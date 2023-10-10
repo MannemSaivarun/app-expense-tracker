@@ -62,21 +62,19 @@ cursor: pointer;
 #deletebtn{
   margin-left: 2px;
   padding: 1px;
-width: 10%;
+width: 15%;
 cursor: pointer;
 background-color: red;
 border-color: red;
 }
-.expenses-list{
+/* .expenses-list{
   width: 500px;
-  position: relative;
+  padding-right: px;
+  position: relative ;
   left: -600px;
   border-right: 2px solid black;
-}
+} */
 
-#list-of-expenses{
-  padding-left: 0;
-}
 #membership{
 position: relative; 
 top: 20px; 
@@ -97,18 +95,43 @@ top: 20px;
     width: 400px;
     overflow: hidden;
     white-space: nowrap;
-  }
-  
+  } 
   #scroll-content {
     display: inline-block;
     animation: scrollText 12s linear infinite;
     padding: 10px;
     
   }
-  #premiumfeatures{
+  /* #premiumfeatures{
+    width: 400px;
     position: relative;
     top: 50px;
-  }
+  } */
+
+  #premiumfeatures, .expenses-list {
+    width: 50%;
+    box-sizing: border-box;
+    float: left;
+    padding: 20px;
+    margin-top: 20px;
+    border-right: 1px solid #ccc; /* Add a border on the right side of the first div */
+}
+
+.expenses-list {
+    border-right: none; /* Remove the border on the right side of the second div */
+}
+
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+#list-of-expenses{
+position: relative;
+left: -50px;
+}
+
+
   
   @keyframes scrollText {
     0% {

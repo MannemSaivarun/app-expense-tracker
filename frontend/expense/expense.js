@@ -136,15 +136,17 @@ document.getElementById('rzp-button1').onclick = async function(e){
     });
 }
 
-
-
-
 function showLeaderboard(){
     document.getElementById('leaderboard').onclick = async ()=>{
         const token = localStorage.getItem('token')
-        const userLeaderBoardArray = await axios.get('http://localhost:3000/premium/leaderboard')
-        console.log(userLeaderBoardArray);
+        const userLeaderBoardArray = await axios.get('http://localhost:3000/premium/leaderboard',{headers:{"Authorization": token}})
+        console.log(userLeaderBoardArray.data);
         //<-------to be displayed------>
-    
+        const parentElem = document.getElementById('list-of-leaders')
+        parentElem.innerHTML = ""
+        userLeaderBoardArray.data.forEach((userLeader)=>{
+            parentElem.innerHTML += `<ul>Total expenses of ${userLeader.name} is ${userLeader.total_cost}</ul>`
+        })
+        
     }
 }
