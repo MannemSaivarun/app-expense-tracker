@@ -21,6 +21,7 @@ exports.addUser = async (req,res,next)=>{
             const name = req.body.name;
             const email = req.body.email;
             const password = req.body.password;
+            
             //console.log("post request");
             if(isstringinvalid(name)|| isstringinvalid(email) || isstringinvalid(password)){
                 return res.status(400).json({err:"bad parameters. Something is missing"})

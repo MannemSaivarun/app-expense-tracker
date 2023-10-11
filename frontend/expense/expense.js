@@ -15,8 +15,8 @@ function savetoexpensedatabase(event){
     const token = localStorage.getItem('token')
     axios.post("http://localhost:3000/expense/add-expense", obj , {headers :{"Authorization" : token}}).
     then((response)=>{
-        // alert(response.data.message)
-        displayOnScreen(response.data.Newexpensedetails);
+        alert("successfully added expense")
+        displayOnScreen(response.data.expense);
     }
     ).catch(err=>{
         console.log("!!!error in adding expense!!!")
@@ -121,7 +121,7 @@ document.getElementById('rzp-button1').onclick = async function(e){
                 payment_id: response.razorpay_payment_id,
             },{headers:{"Authorization": token} })
             alert('You are a premium user now')
-            localStorage.setItem('token',res.data.token)
+            localStorage.setItem('token',response.data.token)
             showpremiummessage()
             showLeaderboard()
         },
@@ -145,7 +145,7 @@ function showLeaderboard(){
         const parentElem = document.getElementById('list-of-leaders')
         parentElem.innerHTML = ""
         userLeaderBoardArray.data.forEach((userLeader)=>{
-            parentElem.innerHTML += `<ul>Total expenses of ${userLeader.name} is ${userLeader.total_cost}</ul>`
+            parentElem.innerHTML += `<ul>Total expenses of ${userLeader.name} is ${userLeader.totalexpense}</ul>`
         })
         
     }

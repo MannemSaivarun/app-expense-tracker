@@ -1,21 +1,29 @@
 const Expense = require("../model/expense");
+const User = require("../model/user");
 
 exports.addExpense = async (req,res,next)=>{
-    try {
+    
         console.log('expense path is called', req.body);
         const expense = req.body.expense;
         const description = req.body.description;
         const category = req.body.category;
-        //console.log("post request");
-        const data = await Expense.create({expense: expense, description: description, category: category,userId : req.user.id})
-        res.status(201).json({Newexpensedetails:data, message:"succesfully added new expense"});
-        
-
-    } catch (error) {
-            res.status(500).json({
-            error: error
+        Expense.create({expense: expense, description: description, category: category,userId : req.user.id})
+         .then(oneexpense =>{
+            const totalexpense = Number(req.user.totalexpense) + Number(expense)
+            User.update({
+                totalexpense : totalexpense
+            },{
+                where:{id: req.user.id}
+            }).then(async()=>{
+                res.status(200).json({expense:oneexpense})
+            }).catch(async(err)=>{
+                return res.status(500).json({success : false, error:err})
+            })
+        }).catch(async(err)=>{
+            return res.status(500).json({success : false, error:err})
         })
-    }
+        
+    
 }
 
 exports.getexpenses = async (req,res)=>{
