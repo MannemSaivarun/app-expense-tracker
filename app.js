@@ -4,6 +4,7 @@ const Expense = require('./model/expense')
 const Order = require('./model/orders');
 const app = express();
 const sequelize = require('./util/database');
+const Forgotpassword = require('./model/forgotpassword');
 
 
 const bodyParser = require('body-parser');
@@ -26,11 +27,18 @@ app.use('/purchase',purchaseRoutes);
 const premiumRoutes = require('./routes/premiumfeatures')
 app.use('/premium',premiumRoutes);
 
+
+const forgotpasswordRoutes = require('./routes/resetpassword');
+app.use('/password',forgotpasswordRoutes)
+
 User.hasMany(Expense);
 Expense.belongsTo(User);
 
 User.hasMany(Order);
 Order.belongsTo(User);
+
+// User.hasMany(Forgotpassword);
+// Forgotpassword.belongsTo(User);
 
 sequelize.sync().then(result =>{
     app.listen(3000);
