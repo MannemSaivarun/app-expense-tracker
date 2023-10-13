@@ -5,7 +5,7 @@ const Order = require('./model/orders');
 const app = express();
 const sequelize = require('./util/database');
 const Forgotpassword = require('./model/forgotpassword');
-
+require('dotenv').config();
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json())
@@ -37,8 +37,8 @@ Expense.belongsTo(User);
 User.hasMany(Order);
 Order.belongsTo(User);
 
-// User.hasMany(Forgotpassword);
-// Forgotpassword.belongsTo(User);
+User.hasMany(Forgotpassword);
+Forgotpassword.belongsTo(User);
 
 sequelize.sync().then(result =>{
     app.listen(3000);
