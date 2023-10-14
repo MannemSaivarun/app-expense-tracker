@@ -66,6 +66,12 @@ function parseJwt (token) {
 
     return JSON.parse(jsonPayload);
 }
+function showdownloadedfile(fileurl){
+    const parentelem = document.getElementById("downloadfiles");
+    const childelem = document.createElement('li');
+    childelem.textContent = fileurl;
+    parentelem.appendChild(childelem);
+}
 function showpremiummessage(){
            document.getElementById('rzp-button1').style.display ="none";
            document.getElementById('leaderboard').style.display = "block";
@@ -101,13 +107,19 @@ window.addEventListener("DOMContentLoaded",()=>{
     .catch(err=>{
         console.log("unable to get all users",err)
     })
+    axios.get("http://localhost:3000/user/get-alldownloadedfiles",{headers:{"Authorization" : token}})
+    .then(res=>{
+        
+        console.log("all downloaddetails",res.data.alldownloaddetails)
+        for(let i=0; i<res.data.alldownloaddetails.length; i++){
+            showdownloadedfile(res.data.alldownloaddetails[i].fileUrl)
+        }
+    })
+    .catch(err=>{
+        console.log("unable to get all users",err)
+    })
 })
-// if(localStorage.getItem('ispremiumuser')){
-//     document.getElementById('rzp-button1').style.display ="none";
-//     document.getElementById('scroll-content').innerHTML = "Now You'r a premium user. Enjoy all the premium features"
-//     document.body.style.backgroundColor = "#ABD417"
-//     document.getElementById('expense-form').style.backgroundColor="#2DD417"
-// }
+
 document.getElementById('rzp-button1').onclick = async function(e){
     console.log("button clicked")
     const token = localStorage.getItem('token');
@@ -211,7 +223,7 @@ function populateTable(selectedRange) {
             savings.textContent = totalIncomeAmount - totalExpenseAmount;
         })
         .catch(error => {
-            console.error('Error fetching data:', error);
+            console.log('Error fetching data:', error);
         });
 
     
@@ -231,3 +243,27 @@ function populateTable(selectedRange) {
 dateRangeSelect.addEventListener('change', (event) => {
     populateTable(event.target.value);
 });
+
+
+
+function download(){
+    const token = localStorage.getItem('token');
+    axios.get('http://localhost:3000/user/download', { headers: {"Authorization" : token} })
+    .then((response) => {
+        if(response.status === 201){
+            //the bcakend is essentially sending a download link
+            //  which if we open in browser, the file would download
+            var a = document.createElement("a");
+            a.href = response.data.fileURL;
+            a.download = 'myexpense.csv';
+            a.click();
+            showdownloadedfile(response.data.fileURL)
+        } else {
+            throw new Error(response.data.message)
+        }
+
+    })
+    .catch((err) => {
+        cosole.log(err)
+    });
+}

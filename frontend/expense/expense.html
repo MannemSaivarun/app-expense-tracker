@@ -6,7 +6,10 @@
     <link rel="stylesheet" href="expense.css">
 </head>
 <body>
-    <button id="download" type="button" disabled>Download report</button>
+    <button onclick="download()" id="download" type="input" disabled>Download report</button>
+    <ul id="downloadfiles">
+        <li><strong>these all are the urls for the files u have downloaded. to download again copay paste in your browser</strong></li>
+    </ul>
     <div class="container" id="expense-form" >
         <form id="expense-form-container" onsubmit="savetoexpensedatabase(event)">
             <label for="expense">Expense:</label>

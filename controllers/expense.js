@@ -1,6 +1,42 @@
+// const { stringify } = require("uuid");
+const downloadFile = require('../model/download');
 const Expense = require("../model/expense");
 const User = require("../model/user");
 const sequelize = require("../util/database");
+const AWS = require('aws-sdk');
+const UserServices = require('../services/userservices');
+const S3Services = require('../services/s3sevices');
+require('dotenv').config();
+
+
+
+exports.downloadexpense = async (req,res)=>{
+   try {
+    // const expenses = await Expense.findAll({where : {userId : req.user.id}});
+    // const expenses  = await req.user.getExpenses();
+    const expenses  = await UserServices.getExpenses(req);
+    const stringifiedExpenses = JSON.stringify(expenses);
+    const userId = req.user.id;
+    const filename = `Expense${userId}/${new Date()}.txt`;
+    const fileURL = await S3Services.uploadToS3(stringifiedExpenses, filename);
+    console.log(fileURL)
+    downloadFile.create({fileUrl:fileURL, userId:req.user.id})
+    res.status(201).json({fileURL:fileURL, success: true})
+   } catch (error) {
+    console.log(error)
+    res.status(500).json({fileURL:'',success:false,error:error})
+   }
+}
+exports.getdownloadfiles = async(req,res)=>{
+    try {
+        const alldownloads = await downloadFile.findAll({where : {userId : req.user.id}});
+        console.log("alldownloads",alldownloads)
+        res.status(200).json({alldownloaddetails: alldownloads});
+    } catch (error) {
+        console.log("error at getting all downloadfiles")
+        res.status(500).json({error: error})  
+    }
+}
 
 exports.addExpense = async (req,res,next)=>{
         const t = await sequelize.transaction();

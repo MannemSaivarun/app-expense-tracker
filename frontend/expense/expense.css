@@ -132,11 +132,14 @@ position: relative;
 left: -50px;
 }
 
-/* #download{
+#download{
   cursor: pointer;
   background-color: blue;
   color: white;
-} */
+}
+#download :hover{
+  background-color: red;
+}
   
   @keyframes scrollText {
     0% {
@@ -158,7 +161,13 @@ th, td {
     padding: 8px;
     text-align: left;
 }
-
+#downloadfiles{
+  float: right;
+  height: 300px;
+  width: 600px; 
+  overflow: auto;
+  border: 1px solid #ccc;
+}
 
   
   
