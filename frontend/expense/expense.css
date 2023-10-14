@@ -1,6 +1,6 @@
 body{
     background-color: rgb(246, 239, 229);
-    margin-left: 40%;
+    margin-left: 5px
 }
 .container{
 width: 320px;
@@ -108,13 +108,14 @@ top: 20px;
     top: 50px;
   } */
 
-  #premiumfeatures, .expenses-list {
-    width: 50%;
+  
+  #premiumfeatures-2, #premiumfeatures, .expenses-list {
+    width: 30%;
     box-sizing: border-box;
     float: left;
     padding: 20px;
     margin-top: 20px;
-    border-right: 1px solid #ccc; /* Add a border on the right side of the first div */
+    border-right: 1px solid red; /* Add a border on the right side of the first div */
 }
 
 .expenses-list {
@@ -131,7 +132,11 @@ position: relative;
 left: -50px;
 }
 
-
+/* #download{
+  cursor: pointer;
+  background-color: blue;
+  color: white;
+} */
   
   @keyframes scrollText {
     0% {
@@ -141,8 +146,18 @@ left: -50px;
       transform: translateX(-100%);
     }
   }
+ 
   
-
+  table {
+    border-collapse: collapse;
+    width: 80%;
+    margin: 20px auto;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
 
 
   

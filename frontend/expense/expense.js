@@ -1,5 +1,3 @@
-
-
 function savetoexpensedatabase(event){
     event.preventDefault();
     const expense = event.target.expense.value;
@@ -72,10 +70,15 @@ function showpremiummessage(){
            document.getElementById('rzp-button1').style.display ="none";
            document.getElementById('leaderboard').style.display = "block";
            document.getElementById('premiumfeatures').style.display="block";
-           
+           document.getElementById('premiumfeatures-2').style.display="block";
+           document.getElementById("download").disabled = false;
+           // Initial population of the table
+           populateTable(dateRangeSelect.value);
+
            document.getElementById('scroll-content').innerHTML = "Now You'r a premium user. Enjoy all the premium features"
            document.body.style.backgroundColor = "#ABD417"
            document.getElementById('expense-form').style.backgroundColor="#2DD417"
+
 }
 window.addEventListener("DOMContentLoaded",()=>{
 
@@ -116,12 +119,13 @@ document.getElementById('rzp-button1').onclick = async function(e){
         //handler funtion will handle the success payment
         "handler":async function (response){
             console.log("handler options")
-            await axios.post('http://localhost:3000/purchase/updatetransactionstatus',{
+            const res = await axios.post('http://localhost:3000/purchase/updatetransactionstatus',{
                 order_id: options.order_id,
                 payment_id: response.razorpay_payment_id,
             },{headers:{"Authorization": token} })
             alert('You are a premium user now')
-            localStorage.setItem('token',response.data.token)
+            console.log("response.data.token",res.data.token)
+            localStorage.setItem('token',res.data.token)
             showpremiummessage()
             showLeaderboard()
         },
@@ -150,3 +154,80 @@ function showLeaderboard(){
         
     }
 }
+
+
+const dateRangeSelect = document.getElementById('dateRange');
+const dataRows = document.getElementById('dataRows');
+const totalIncome = document.getElementById('totalIncome');
+const totalExpense = document.getElementById('totalExpense');
+const savings = document.getElementById('savings');
+        
+function populateTable(selectedRange) {
+    // Filter data based on the selected date range.
+    // const today = new Date();
+    // const filteredData = data.filter(item => {
+    //     const itemDate = new Date(item.date);
+    //     if (selectedRange === 'daily') {
+    //         return itemDate.toDateString() === today.toDateString();
+    //     } else if (selectedRange === 'weekly') {
+    //         const oneWeekAgo = new Date(today);
+    //         oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    //         return itemDate >= oneWeekAgo;
+    //     } else {
+    //         const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    //         return itemDate >= startOfMonth;
+    //     }
+    // });
+
+    axios.get(`/api/finance/${selectedRange}`)
+        .then(response => {
+            const data = response.data;
+
+            // Clear existing rows and populate the table with the fetched data
+            dataRows.innerHTML = '';
+            let totalIncomeAmount = 0;
+            let totalExpenseAmount = 0;
+
+            filteredData.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.date}</td>
+                    <td>${item.description}</td>
+                    <td>${item.category}</td>
+                    <td>${item.category === 'Income' ? item.amount : ''}</td>
+                    <td>${item.category === 'Expense' ? -item.amount : ''}</td>
+                `;
+                dataRows.appendChild(row);
+        
+                if (item.category === 'Income') {
+                    totalIncomeAmount += item.amount;
+                } else if (item.category === 'Expense') {
+                    totalExpenseAmount += item.amount;
+                }
+            });
+
+            totalIncome.textContent = totalIncomeAmount;
+            totalExpense.textContent = totalExpenseAmount;
+            savings.textContent = totalIncomeAmount - totalExpenseAmount;
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+
+    
+    // dataRows.innerHTML = '';
+    // let totalIncomeAmount = 0;
+    // let totalExpenseAmount = 0;
+    
+    
+
+    // totalIncome.textContent = totalIncomeAmount;
+    // totalExpense.textContent = totalExpenseAmount;
+    // savings.textContent = totalIncomeAmount - totalExpenseAmount;
+}
+
+
+// Listen for changes to the date range selection
+dateRangeSelect.addEventListener('change', (event) => {
+    populateTable(event.target.value);
+});
