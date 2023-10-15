@@ -5,6 +5,7 @@ const Order = require('./model/orders');
 const app = express();
 const sequelize = require('./util/database');
 const Forgotpassword = require('./model/forgotpassword');
+const downloadFile =require('./model/download')
 require('dotenv').config();
 
 const bodyParser = require('body-parser');
@@ -31,6 +32,8 @@ app.use('/premium',premiumRoutes);
 const forgotpasswordRoutes = require('./routes/resetpassword');
 app.use('/password',forgotpasswordRoutes)
 
+
+
 User.hasMany(Expense);
 Expense.belongsTo(User);
 
@@ -39,6 +42,9 @@ Order.belongsTo(User);
 
 User.hasMany(Forgotpassword);
 Forgotpassword.belongsTo(User);
+
+User.hasMany(downloadFile);
+downloadFile.belongsTo(User);
 
 sequelize.sync().then(result =>{
     app.listen(3000);

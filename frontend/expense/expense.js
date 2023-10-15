@@ -20,6 +20,58 @@ function savetoexpensedatabase(event){
         console.log("!!!error in adding expense!!!")
     })
 }
+let currentPage = 1;
+function pagination(){
+        const expenseList = document.getElementById('list-of-expenses');
+        const prevButton = document.getElementById('prevbtn');
+        const nextButton = document.getElementById('nextbtn');
+        const itemsPerPageInput = document.getElementById('itemsPerPage');
+
+        
+        let itemsPerPage = parseInt(itemsPerPageInput.value, 10);
+
+        function displayExpenses(page, pageSize) {
+            const token =localStorage.getItem('token')
+            axios.get(`http://localhost:3000/expense/pagination?page=${page}&pageSize=${pageSize}`,{headers:{"Authorization" : token}})
+                .then(response => {
+                    const data = response.data;
+                    const expenses = data.Data;
+
+                    expenseList.innerHTML = '';
+                    expenses.forEach(expense => {
+                        displayOnScreen(expense)
+                    });
+
+                    prevButton.disabled = page <= 1;
+                    nextButton.disabled = (page * pageSize) >= data.totalCount;
+                })
+                .catch(error => {
+                    console.error('Error fetching expenses:', error);
+                });
+        }
+
+        function nextPage() {
+            currentPage++;
+            displayExpenses(currentPage, itemsPerPage);
+        }
+
+        function prevPage() {
+            currentPage--;
+            displayExpenses(currentPage, itemsPerPage);
+        }
+
+        function changeItemsPerPage() {
+            itemsPerPage = parseInt(itemsPerPageInput.value, 10);
+            currentPage = 1;
+            displayExpenses(currentPage, itemsPerPage);
+        }
+
+        nextButton.addEventListener('click', nextPage);
+        prevButton.addEventListener('click', prevPage);
+        itemsPerPageInput.addEventListener('change', changeItemsPerPage);
+
+        displayExpenses(currentPage, itemsPerPage);
+}
 function displayOnScreen(obj){
     const parentelem = document.getElementById("list-of-expenses");
     const childelem = document.createElement('ul');
@@ -66,11 +118,24 @@ function parseJwt (token) {
 
     return JSON.parse(jsonPayload);
 }
-function showdownloadedfile(fileurl){
+function showdownloadedfile(){
     const parentelem = document.getElementById("downloadfiles");
-    const childelem = document.createElement('li');
-    childelem.textContent = fileurl;
-    parentelem.appendChild(childelem);
+    const token = localStorage.getItem('token')
+
+    axios.get("http://localhost:3000/user/get-alldownloadedfiles",{headers:{"Authorization" : token}})
+    .then(res=>{
+        
+        console.log("all downloaddetails",res.data.alldownloaddetails)
+        for(let i=0; i<res.data.alldownloaddetails.length; i++){
+            const childelem = document.createElement('li');
+            childelem.textContent = res.data.alldownloaddetails[i].fileUrl;
+            parentelem.appendChild(childelem);
+        }
+    })
+    .catch(err=>{
+        console.log("unable to get all users",err)
+    })
+
 }
 function showpremiummessage(){
            document.getElementById('rzp-button1').style.display ="none";
@@ -94,12 +159,14 @@ window.addEventListener("DOMContentLoaded",()=>{
     if(ispremiumuser){
         showpremiummessage()
         showLeaderboard()
+        showdownloadedfile()
+        pagination()
     }
-    console.log(token)
-    axios.get("http://localhost:3000/expense/get-allcategories",{headers:{"Authorization" : token}})
+    else{
+        axios.get("http://localhost:3000/expense/get-allcategories",{headers:{"Authorization" : token}})
     .then(res=>{
         
-        console.log("all categories",res.data.allcategorydetails)
+        console.log("all categories",res.data.allcategorydetails[0])
         for(let i=0;i<res.data.allcategorydetails.length;i++){
             displayOnScreen(res.data.allcategorydetails[i])
         }
@@ -107,17 +174,9 @@ window.addEventListener("DOMContentLoaded",()=>{
     .catch(err=>{
         console.log("unable to get all users",err)
     })
-    axios.get("http://localhost:3000/user/get-alldownloadedfiles",{headers:{"Authorization" : token}})
-    .then(res=>{
-        
-        console.log("all downloaddetails",res.data.alldownloaddetails)
-        for(let i=0; i<res.data.alldownloaddetails.length; i++){
-            showdownloadedfile(res.data.alldownloaddetails[i].fileUrl)
-        }
-    })
-    .catch(err=>{
-        console.log("unable to get all users",err)
-    })
+    }
+    
+    
 })
 
 document.getElementById('rzp-button1').onclick = async function(e){
@@ -155,6 +214,7 @@ document.getElementById('rzp-button1').onclick = async function(e){
 function showLeaderboard(){
     document.getElementById('leaderboard').onclick = async ()=>{
         const token = localStorage.getItem('token')
+        console.log(token)
         const userLeaderBoardArray = await axios.get('http://localhost:3000/premium/leaderboard',{headers:{"Authorization": token}})
         console.log(userLeaderBoardArray.data);
         //<-------to be displayed------>

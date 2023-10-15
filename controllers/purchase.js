@@ -1,5 +1,6 @@
 const Razorpay = require('razorpay');
 const Order = require('../model/orders');
+const jwt = require('jsonwebtoken'); 
 const userController = require('../controllers/user')
 require('dotenv').config(); // Load environment variables from .env file
 
@@ -29,7 +30,9 @@ exports.purchasepremium = async (req,res)=>{
         
     }
 }
-
+function generateAccessToken(id, ispremiumuser){
+    return jwt.sign({userId: id, ispremiumuser}, 'secretkey')
+}
 exports.updateTransactionStatus = async (req,res)=>{
     try {
         console.log("----->entered step 1")
@@ -38,7 +41,7 @@ exports.updateTransactionStatus = async (req,res)=>{
         const promise1 =  order.update({paymentid : payment_id, status: 'SUCCESSFUL'})
         const promise2 =  req.user.update({ispremiumuser: true})
         Promise.all([promise1, promise2]).then(()=>{
-            return res.status(202).json({success: true, message: "Transaction Successful"});
+            return res.status(202).json({success: true, message: "Transaction Successful", token: generateAccessToken(req.user.id, true)});
         }).catch((err)=>{
             throw new Error(err)
         })

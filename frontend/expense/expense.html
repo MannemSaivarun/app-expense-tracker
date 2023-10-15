@@ -23,7 +23,9 @@
                 <option value="food">food</option>
                 <option value="petrol">petrol</option>
                 <option value="salary">salary</option>
-                <option value="movie">movie</option>   
+                <option value="movie">movie</option>
+                <option value="vacation">vacation</option>
+                <option value="other">other</option>   
             </select>
             <button id="expense-btn" type="submit">Add Expense</button>
         </form>
@@ -87,7 +89,17 @@
     </div>
     <div class="expenses-list">
         <h1>List of Expenses</h1>
+        <label for="itemsPerPage">Items per Page:</label>
+        <select id="itemsPerPage">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+        </select>
         <ul id="list-of-expenses"></ul>
+        <button id="prevbtn">Previous</button>
+        <button id="nextbtn">Next</button>
+
+        
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
     <script src="expense.js"></script>

@@ -125,4 +125,33 @@ exports.deleteExpense = async(req,res)=>{
         res.status(500).json({error: error})
     }
 }
+exports.getPagewiseExpenses = async(req,res)=>{
+    try {
+        const page = parseInt(req.query.page, 10);
+        const pageSize = parseInt(req.query.pageSize, 10);
+        // const {page,pageSize}=req.query;
+        console.log(page,pageSize)
+        const offset = (page-1)*pageSize
+        const limits = pageSize
+        const {count,rows} = await Expense.findAndCountAll({
+            offset:offset,
+            limit:limits,
+            where:{userId:req.user.id}
+           
+        })
+        console.log("data",count , rows)
+        res.json({Data:rows, totalCount: count})
 
+        // const alldata = await UserServices.getExpenses(req)
+        // if(alldata.length <= pageSize - (page-1)*pageSize){
+        //     console.log("data",alldata)
+        //     res.json({Data:alldata})
+        // }
+        // else{
+            
+        // }
+
+    } catch (error) {
+        console.log("something error occured in pagination",error)
+    }
+}
