@@ -9,5 +9,8 @@ router.post('/add-expense', UserAuthentication.authenticate ,expenseControllers.
 router.get('/get-allcategories',UserAuthentication.authenticate ,expenseControllers.getexpenses)
 
 router.delete('/delete-category/:id', expenseControllers.deleteExpense)
+router.get('/pagination',UserAuthentication.authenticate,expenseControllers.getPagewiseExpenses)
+router.get('/finance/:dateRange',UserAuthentication.authenticate, expenseControllers.getSelectedRangeExpenses)
+
 
 module.exports =router;

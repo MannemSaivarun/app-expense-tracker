@@ -61,7 +61,9 @@ exports.forgotpassword = async (req, res) => {
     }
 }
 
+
 exports.resetpassword = async(req, res) => {
+    
     try{
         const id =  req.params.id;
     const forgotpasswordrequest = await Forgotpassword.findOne({ where : 

@@ -30,9 +30,10 @@ exports.purchasepremium = async (req,res)=>{
         
     }
 }
-function generateAccessToken(id, ispremiumuser){
+function generateAccessToken(id , ispremiumuser) {
     return jwt.sign({userId: id, ispremiumuser}, 'secretkey')
 }
+
 exports.updateTransactionStatus = async (req,res)=>{
     try {
         console.log("----->entered step 1")

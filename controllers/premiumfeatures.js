@@ -1,6 +1,7 @@
 const User = require('../model/user');
 const Expense = require("../model/expense");
 const sequelize = require("../util/database");
+
 const e = require('express');
 
 exports.getUserLeaderboard = async (req,res)=>{

@@ -20,6 +20,7 @@ const expense = sequelize.define('expenses',{
     allowNull: false,
     unique: false
   }
+  
 });
 
 

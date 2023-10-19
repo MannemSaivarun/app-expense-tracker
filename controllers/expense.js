@@ -139,7 +139,7 @@ exports.getPagewiseExpenses = async(req,res)=>{
             where:{userId:req.user.id}
            
         })
-        console.log("data",count , rows)
+        //console.log("data",count , rows)
         res.json({Data:rows, totalCount: count})
 
         // const alldata = await UserServices.getExpenses(req)
@@ -153,5 +153,32 @@ exports.getPagewiseExpenses = async(req,res)=>{
 
     } catch (error) {
         console.log("something error occured in pagination",error)
+    }
+}
+exports.getSelectedRangeExpenses = async(req,res)=>{
+    try {
+        const { dateRange } = req.params;
+        const data = await UserServices.getExpenses(req)
+        console.log("Data",data);
+        const today = new Date();
+
+        const filteredData = data.filter(item => {
+            const itemDate = new Date(item.updatedAt);
+            console.log(item.updatedAt, itemDate.toDateString(),today.toDateString())
+            if (dateRange === 'daily') {
+                return itemDate.toDateString() === today.toDateString();
+            } else if (dateRange === 'weekly') {
+                const oneWeekAgo = new Date(today);
+                oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+                return itemDate >= oneWeekAgo;
+            } else {
+                const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+                return itemDate >= startOfMonth;
+            }
+        });
+        console.log("filteredData------->",filteredData)
+        res.json({filteredData:filteredData});
+    } catch (error) {
+        console.log("something error occured in Rangebasis getusers",error)
     }
 }

@@ -11,6 +11,7 @@ const download = sequelize.define("downloadFile",{
     fileUrl:{
         type: Sequelize.STRING
     }
+    
 });
 
 module.exports = download;

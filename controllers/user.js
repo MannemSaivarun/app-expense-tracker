@@ -44,11 +44,9 @@ exports.addUser = async (req,res,next)=>{
             })
         }
     }
-// Generate a random 256-bit (32-byte) secret key
-// const secretKey = crypto.randomBytes(64).toString('hex');
-// console.log(secretKey.toString())
+    //generatetoken function
 function generateAcessToken(id,name,ispremiumuser){
-    return jwt.sign({userId : id, name : name, ispremiumuser },'secretkey')
+    return jwt.sign({userId : id, name : name, ispremiumuser },process.env.SECRET_TOKEN_KEY)
 }    
 
 //login

@@ -25,6 +25,7 @@ const User = sequelize.define('users',{
     type: Sequelize.INTEGER,
     defaultValue: 0
   }
+  
 });
 
 

@@ -6,4 +6,5 @@ const Authorization = require("../middlewares/Auth");
 
 router.get('/leaderboard' ,Authorization.authenticate ,premiumControllers.getUserLeaderboard);
 
+
 module.exports = router;

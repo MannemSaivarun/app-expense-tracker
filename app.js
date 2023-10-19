@@ -5,7 +5,12 @@ const Order = require('./model/orders');
 const app = express();
 const sequelize = require('./util/database');
 const Forgotpassword = require('./model/forgotpassword');
-const downloadFile =require('./model/download')
+const downloadFile =require('./model/download');
+const helmet = require('helmet');
+const compression = require('compression');
+const morgan = require('morgan');
+const fs = require('fs');
+const path = require('path');
 require('dotenv').config();
 
 const bodyParser = require('body-parser');
@@ -32,7 +37,13 @@ app.use('/premium',premiumRoutes);
 const forgotpasswordRoutes = require('./routes/resetpassword');
 app.use('/password',forgotpasswordRoutes)
 
-
+const accessLogStream = fs.createWriteStream(
+    path.join(__dirname, 'access.log'),
+    {flags: 'a'}
+);
+app.use(helmet())
+app.use(compression())
+app.use(morgan('combined', {stream:accessLogStream}))
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
@@ -47,7 +58,7 @@ User.hasMany(downloadFile);
 downloadFile.belongsTo(User);
 
 sequelize.sync().then(result =>{
-    app.listen(3000);
+    app.listen(process.env.PORT || 3000);
 }).catch(err =>{
     console.log(err);
 })
