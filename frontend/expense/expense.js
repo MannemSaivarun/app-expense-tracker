@@ -1,3 +1,4 @@
+
 function savetoexpensedatabase(event){
     event.preventDefault();
     const expense = event.target.expense.value;
@@ -161,6 +162,7 @@ window.addEventListener("DOMContentLoaded",()=>{
         showLeaderboard()
         showdownloadedfile()
         pagination()
+        populateTable(dateRangeSelect.value);
     }
     else{
         axios.get("http://localhost:3000/expense/get-allcategories",{headers:{"Authorization" : token}})
@@ -235,25 +237,11 @@ const totalExpense = document.getElementById('totalExpense');
 const savings = document.getElementById('savings');
         
 function populateTable(selectedRange) {
-    // Filter data based on the selected date range.
-    // const today = new Date();
-    // const filteredData = data.filter(item => {
-    //     const itemDate = new Date(item.date);
-    //     if (selectedRange === 'daily') {
-    //         return itemDate.toDateString() === today.toDateString();
-    //     } else if (selectedRange === 'weekly') {
-    //         const oneWeekAgo = new Date(today);
-    //         oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-    //         return itemDate >= oneWeekAgo;
-    //     } else {
-    //         const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    //         return itemDate >= startOfMonth;
-    //     }
-    // });
-
-    axios.get(`/api/finance/${selectedRange}`)
+    const token = localStorage.getItem('token')
+    axios.get(`http://localhost:3000/expense/finance/${selectedRange}`,{headers:{"Authorization": token}})
         .then(response => {
-            const data = response.data;
+            console.log("done")
+            const filteredData = response.data.filteredData;
 
             // Clear existing rows and populate the table with the fetched data
             dataRows.innerHTML = '';
@@ -262,19 +250,20 @@ function populateTable(selectedRange) {
 
             filteredData.forEach(item => {
                 const row = document.createElement('tr');
+                const itemDate = new Date(item.updatedAt)
                 row.innerHTML = `
-                    <td>${item.date}</td>
+                    <td>${itemDate.toDateString()}</td>
                     <td>${item.description}</td>
                     <td>${item.category}</td>
-                    <td>${item.category === 'Income' ? item.amount : ''}</td>
-                    <td>${item.category === 'Expense' ? -item.amount : ''}</td>
+                    <td>${item.category === 'salary' ? item.expense : ''}</td>
+                    <td>${item.category !== 'salary' ? -item.expense : ''}</td>
                 `;
                 dataRows.appendChild(row);
         
-                if (item.category === 'Income') {
-                    totalIncomeAmount += item.amount;
-                } else if (item.category === 'Expense') {
-                    totalExpenseAmount += item.amount;
+                if (item.category === 'salary') {
+                    totalIncomeAmount += item.expense;
+                } else{
+                    totalExpenseAmount += item.expense;
                 }
             });
 
