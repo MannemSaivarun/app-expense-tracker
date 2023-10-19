@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const User = require('./model/user');
 const Expense = require('./model/expense')
@@ -11,7 +12,7 @@ const compression = require('compression');
 const morgan = require('morgan');
 const fs = require('fs');
 const path = require('path');
-require('dotenv').config();
+
 
 const bodyParser = require('body-parser');
 app.use(bodyParser.json())
