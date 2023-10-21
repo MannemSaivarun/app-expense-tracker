@@ -6,7 +6,8 @@ function checkUserdetails(event){
             email,
             password
         }
-        axios.post("http://localhost:3000/user/login", obj)
+        console.log("obj details",obj)
+        axios.post("http://16.171.224.3:3000/user/login", obj)
         .then((response) =>{
             
             console.log(response.data.message)

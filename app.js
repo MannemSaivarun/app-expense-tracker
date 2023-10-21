@@ -38,6 +38,10 @@ app.use('/premium',premiumRoutes);
 const forgotpasswordRoutes = require('./routes/resetpassword');
 app.use('/password',forgotpasswordRoutes)
 
+// app.use((req,res)=>{
+//     res.sendFile(path.join(__dirname, `frontend/${req.url}`))
+// })
+
 const accessLogStream = fs.createWriteStream(
     path.join(__dirname, 'access.log'),
     {flags: 'a'}

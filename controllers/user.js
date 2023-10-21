@@ -39,6 +39,7 @@ exports.addUser = async (req,res,next)=>{
             
     
         } catch (error) {
+                console.log("error occured")
                 res.status(500).json({
                 error: error
             })

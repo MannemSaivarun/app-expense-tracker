@@ -12,7 +12,7 @@ function savetoexpensedatabase(event){
         
     }
     const token = localStorage.getItem('token')
-    axios.post("http://localhost:3000/expense/add-expense", obj , {headers :{"Authorization" : token}}).
+    axios.post("http://16.171.224.3:3000/expense/add-expense", obj , {headers :{"Authorization" : token}}).
     then((response)=>{
         alert("successfully added expense")
         displayOnScreen(response.data.expense);
@@ -33,7 +33,7 @@ function pagination(){
 
         function displayExpenses(page, pageSize) {
             const token =localStorage.getItem('token')
-            axios.get(`http://localhost:3000/expense/pagination?page=${page}&pageSize=${pageSize}`,{headers:{"Authorization" : token}})
+            axios.get(`http://16.171.224.3:3000/expense/pagination?page=${page}&pageSize=${pageSize}`,{headers:{"Authorization" : token}})
                 .then(response => {
                     const data = response.data;
                     const expenses = data.Data;
@@ -85,7 +85,7 @@ function displayOnScreen(obj){
     deletebtn.setAttribute('id','deletebtn');
 
     deletebtn.onclick = ()=>{
-        axios.delete(`http://localhost:3000/expense/delete-category/${obj.id}`)
+        axios.delete(`http://16.171.224.3:3000/expense/delete-category/${obj.id}`)
        .then(res=>{
         console.log("deleted")
         parentelem.removeChild(childelem);
@@ -123,7 +123,7 @@ function showdownloadedfile(){
     const parentelem = document.getElementById("downloadfiles");
     const token = localStorage.getItem('token')
 
-    axios.get("http://localhost:3000/user/get-alldownloadedfiles",{headers:{"Authorization" : token}})
+    axios.get("http://16.171.224.3:3000/user/get-alldownloadedfiles",{headers:{"Authorization" : token}})
     .then(res=>{
         
         console.log("all downloaddetails",res.data.alldownloaddetails)
@@ -165,7 +165,7 @@ window.addEventListener("DOMContentLoaded",()=>{
         populateTable(dateRangeSelect.value);
     }
     else{
-        axios.get("http://localhost:3000/expense/get-allcategories",{headers:{"Authorization" : token}})
+        axios.get("http://16.171.224.3:3000/expense/get-allcategories",{headers:{"Authorization" : token}})
     .then(res=>{
         
         console.log("all categories",res.data.allcategorydetails[0])
@@ -184,7 +184,7 @@ window.addEventListener("DOMContentLoaded",()=>{
 document.getElementById('rzp-button1').onclick = async function(e){
     console.log("button clicked")
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:3000/purchase/premiummembership', {headers : {"Authorization" : token}})
+    const response = await axios.get('http://16.171.224.3:3000/purchase/premiummembership', {headers : {"Authorization" : token}})
     console.log("response after get request from razorpay",response)
     var options ={
         "key": response.data.key_id,
@@ -192,7 +192,7 @@ document.getElementById('rzp-button1').onclick = async function(e){
         //handler funtion will handle the success payment
         "handler":async function (response){
             console.log("handler options")
-            const res = await axios.post('http://localhost:3000/purchase/updatetransactionstatus',{
+            const res = await axios.post('http://16.171.224.3:3000/purchase/updatetransactionstatus',{
                 order_id: options.order_id,
                 payment_id: response.razorpay_payment_id,
             },{headers:{"Authorization": token} })
@@ -217,7 +217,7 @@ function showLeaderboard(){
     document.getElementById('leaderboard').onclick = async ()=>{
         const token = localStorage.getItem('token')
         console.log(token)
-        const userLeaderBoardArray = await axios.get('http://localhost:3000/premium/leaderboard',{headers:{"Authorization": token}})
+        const userLeaderBoardArray = await axios.get('http://16.171.224.3:3000/premium/leaderboard',{headers:{"Authorization": token}})
         console.log(userLeaderBoardArray.data);
         //<-------to be displayed------>
         const parentElem = document.getElementById('list-of-leaders')
@@ -238,7 +238,7 @@ const savings = document.getElementById('savings');
         
 function populateTable(selectedRange) {
     const token = localStorage.getItem('token')
-    axios.get(`http://localhost:3000/expense/finance/${selectedRange}`,{headers:{"Authorization": token}})
+    axios.get(`http://16.171.224.3:3000/expense/finance/${selectedRange}`,{headers:{"Authorization": token}})
         .then(response => {
             console.log("done")
             const filteredData = response.data.filteredData;
@@ -297,7 +297,7 @@ dateRangeSelect.addEventListener('change', (event) => {
 
 function download(){
     const token = localStorage.getItem('token');
-    axios.get('http://localhost:3000/user/download', { headers: {"Authorization" : token} })
+    axios.get('http://16.171.224.3:3000/user/download', { headers: {"Authorization" : token} })
     .then((response) => {
         if(response.status === 201){
             //the bcakend is essentially sending a download link
